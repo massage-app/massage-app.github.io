@@ -6,11 +6,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
-// Nombre del repositorio en GitHub Pages (https://usuario.github.io/masajes-app/)
-const REPO = 'masajes-app'
-
-export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? `/${REPO}/` : '/',
+// La app se sirve en la raíz de la organización: https://massage-app.github.io/
+export default defineConfig(() => ({
+  base: '/',
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
