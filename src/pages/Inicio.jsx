@@ -14,13 +14,24 @@ export default function Inicio() {
 
   const hoy = hoyISO()
 
-  const turnosHoy = useMemo(
+  // Todos los turnos pendientes, ordenados por fecha y hora.
+  const pendientes = useMemo(
     () =>
       turnos
-        .filter((t) => t.fecha === hoy && t.estado === 'pendiente')
-        .sort((a, b) => a.hora.localeCompare(b.hora)),
-    [turnos, hoy],
+        .filter((t) => t.estado === 'pendiente')
+        .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora)),
+    [turnos],
   )
+
+  // Agrupados por día (manteniendo el orden).
+  const grupos = useMemo(() => {
+    const map = new Map()
+    for (const t of pendientes) {
+      if (!map.has(t.fecha)) map.set(t.fecha, [])
+      map.get(t.fecha).push(t)
+    }
+    return [...map.entries()]
+  }, [pendientes])
 
   return (
     <div className="space-y-4">
@@ -34,30 +45,45 @@ export default function Inicio() {
         </Boton>
       </div>
 
-      {/* Turnos de hoy */}
+      {/* Todos los turnos pendientes */}
       <div>
         <div className="mb-2 flex items-baseline justify-between">
-          <h2 className="text-lg font-bold text-verde-900">Agenda de hoy</h2>
-          {turnosHoy.length > 0 && (
+          <h2 className="text-lg font-bold text-verde-900">Turnos agendados</h2>
+          {pendientes.length > 0 && (
             <span className="text-sm font-medium text-verde-700">
-              {turnosHoy.length} turno{turnosHoy.length === 1 ? '' : 's'}
+              {pendientes.length} turno{pendientes.length === 1 ? '' : 's'}
             </span>
           )}
         </div>
-        {turnosHoy.length === 0 ? (
-          <Vacio icono="☕" titulo="No hay turnos pendientes para hoy" />
+
+        {grupos.length === 0 ? (
+          <Vacio icono="🗓️" titulo="No hay turnos agendados">
+            Reservá uno con el botón “+ Turno”.
+          </Vacio>
         ) : (
-          <div className="space-y-2">
-            {turnosHoy.map((t) => (
-              <div key={t.id} className="flex items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-lg bg-verde-100 px-2 py-0.5 text-sm font-bold text-verde-900">{t.hora}</span>
-                    <span className="truncate font-semibold text-verde-900">{nombreConvocante(t.convocanteId)}</span>
-                  </div>
-                  {t.zona && <p className="mt-1 text-sm text-verde-700">📍 {t.zona}</p>}
+          <div className="space-y-5">
+            {grupos.map(([fecha, lista]) => (
+              <div key={fecha}>
+                <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-verde-700 first-letter:uppercase">
+                  {formatFechaLarga(fecha)}
+                  {fecha === hoy && (
+                    <span className="rounded-full bg-verde-700 px-2 py-0.5 text-xs font-medium text-white">Hoy</span>
+                  )}
+                </h3>
+                <div className="space-y-2">
+                  {lista.map((t) => (
+                    <div key={t.id} className="flex items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-lg bg-verde-100 px-2 py-0.5 text-sm font-bold text-verde-900">{t.hora}</span>
+                          <span className="truncate font-semibold text-verde-900">{nombreConvocante(t.convocanteId)}</span>
+                        </div>
+                        {t.zona && <p className="mt-1 text-sm text-verde-700">📍 {t.zona}</p>}
+                      </div>
+                      <Boton variante="primario" onClick={() => setFinalizando(t)}>Finalizar</Boton>
+                    </div>
+                  ))}
                 </div>
-                <Boton variante="primario" onClick={() => setFinalizando(t)}>Finalizar</Boton>
               </div>
             ))}
           </div>
