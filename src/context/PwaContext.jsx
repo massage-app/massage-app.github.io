@@ -15,6 +15,14 @@ export function PwaProvider({ children }) {
   } = useRegisterSW({
     onRegisteredSW(_url, registro) {
       registroRef.current = registro
+      if (!registro) return
+      // Revisar actualizaciones cada 60s y al volver la app a primer plano,
+      // para que una PWA instalada no quede pegada en una versión vieja.
+      const revisar = () => registro.update().catch(() => {})
+      setInterval(revisar, 60 * 1000)
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') revisar()
+      })
     },
   })
 
