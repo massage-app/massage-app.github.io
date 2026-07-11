@@ -51,7 +51,7 @@ export function Boton({
 
 export function Campo({ label, children, hint }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="mb-1 block text-sm font-medium text-verde-900">{label}</span>
       {children}
       {hint && <span className="mt-1 block text-xs text-verde-700/70">{hint}</span>}
@@ -60,7 +60,7 @@ export function Campo({ label, children, hint }) {
 }
 
 const inputBase =
-  'w-full rounded-xl border border-verde-100 bg-verde-50/40 px-3 py-2.5 text-verde-900 outline-none placeholder:text-verde-700/40 focus:border-verde-500 focus:bg-white'
+  'w-full min-w-0 box-border rounded-xl border border-verde-100 bg-verde-50/40 px-3 py-2.5 text-verde-900 outline-none placeholder:text-verde-700/40 focus:border-verde-500 focus:bg-white'
 
 export function Input(props) {
   return <input className={inputBase} {...props} />
