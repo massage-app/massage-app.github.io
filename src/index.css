@@ -29,3 +29,19 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--color-verde-300) transparent;
 }
+
+/* Normaliza los inputs nativos de fecha/hora: en iOS Safari no respetan
+   width:100% y se desbordan/colapsan. Con appearance:none se comportan como
+   un campo común y ocupan el ancho de su celda. */
+input[type="date"],
+input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  width: 100%;
+}
+
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+  text-align: left;
+}
