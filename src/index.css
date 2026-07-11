@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta verde de la app */
+  --color-verde-50: #EAF6E8;
+  --color-verde-100: #CBE6C7;
+  --color-verde-300: #9BC89B;
+  --color-verde-500: #5E9C6E;
+  --color-verde-700: #3F7A50;
+  --color-verde-900: #2E5A3A;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-verde-50);
+  color: var(--color-verde-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar sutil */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-verde-300) transparent;
+}
